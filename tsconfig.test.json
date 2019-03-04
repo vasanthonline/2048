@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./build-tests/",
+    "module": "commonjs",
+    "target": "es6",
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "lib": [
+      "es2018",
+    ],
+  },
+  "include": [
+    "./test/storey-service.test.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build-tests",
+    "coverage",
+    "bin",
+    "source"
+  ]
+}
