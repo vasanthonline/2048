@@ -9,6 +9,10 @@
     "test:watch": "mocha --require ts-node/register --watch --watch-extensions ts test/*.ts",
     "start": "node dist/main.js"
   },
+  "engines": {
+    "node": ">=10.15.x",
+    "npm": ">=6.4.1"
+  },
   "dependencies": {
     "@types/config": "^0.0.34",
     "config": "^3.0.1"

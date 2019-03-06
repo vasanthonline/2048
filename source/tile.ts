@@ -1,6 +1,6 @@
 export default class Tile {
   
-  constructor(private _x: number, private _y: number, private _value: number = 0){
+  constructor(private _x: number, private _y: number, private _value: number = 0, private _isMerged: boolean = false){
 
   }
 
@@ -26,6 +26,14 @@ export default class Tile {
 
   set y(newY: number) {
     this._y = newY
+  }
+
+  get isMerged() {
+    return this._isMerged
+  }
+
+  set isMerged(isMergedNew: boolean) {
+    this._isMerged = isMergedNew
   }
   
 }
