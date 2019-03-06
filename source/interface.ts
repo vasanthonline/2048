@@ -6,3 +6,7 @@ export enum Directions {
   DOWN = 4
 }
 
+export enum Dimensions {
+  X = 'x',
+  Y = 'y'
+}
