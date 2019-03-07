@@ -5,8 +5,8 @@
   "scripts": {
     "compile": "tsc",
     "compile:watch": "tsc --watch",
-    "test": "tsc -p tsconfig.test.json && nyc mocha build-tests/test/*.js --exit",
-    "test:watch": "mocha --require ts-node/register --watch --watch-extensions ts test/*.ts",
+    "test": "tsc -p tsconfig.test.json && nyc mocha build-tests/tests/*.js --exit",
+    "test:watch": "mocha --require ts-node/register --watch --watch-extensions ts tests/*.ts",
     "start": "node dist/main.js"
   },
   "engines": {

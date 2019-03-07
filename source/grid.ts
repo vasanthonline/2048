@@ -23,6 +23,77 @@ export default class Grid {
     return this.grid
   }
 
+  move(): Array<Array<Tile>> {
+    const grid = this.getGridBeforeMove()
+    const newGrid = grid.map((row: Array<Tile>, rowNumber: number) => {
+      const defaultRow = this.getRowCopy(row)
+      return defaultRow.reduce((newRow: Array<Tile>, tile: Tile, tileIndex: number) => {
+        return this.moveOrMergeTilesInRow(newRow, tile)
+      }, this.getRowCopy(row))
+    })
+    this.grid = this.getGridAfterMove(newGrid)
+    return this.addRandomTileToGrid(config.get('NEW_TILES_PER_TURN'))
+  }
+
+  getGridBeforeMove(): Array<Array<Tile>> {
+    return this.grid
+  }
+
+  getGridAfterMove(newGrid: Array<Array<Tile>> = this.grid): Array<Array<Tile>> {
+    return newGrid.map((row: Array<Tile>) => row.map((tile: Tile) => new Tile(tile.x, tile.y, tile.value)))
+  }
+
+  getRowCopy(row: Array<Tile> = []): Array<Tile> {
+    return row.map((tile: Tile) => new Tile(tile.x, tile.y, tile.value))
+  }
+
+  moveOrMergeTilesInRow(row: Array<Tile> = [], inputTile: Tile): Array<Tile> {
+    const moveTileIndex = this.getMoveTileIndex(row, inputTile)
+    const mergedTileIndex = this.getMergeTileIndex(row, row[moveTileIndex], inputTile)
+    if(mergedTileIndex >= 0){
+      row[mergedTileIndex].value = inputTile.value * 2
+      row[inputTile[this.dimension]].value = 0
+      row[mergedTileIndex].isMerged = true
+    }else if(moveTileIndex >= 0){
+      row[moveTileIndex].value = inputTile.value
+      row[inputTile[this.dimension]].value = 0
+      row[moveTileIndex].isMerged = false
+    }
+    return row.sort((tileA: Tile, tileB: Tile) => tileA[this.dimension] - tileB[this.dimension])
+  }
+
+  getMergeTileIndex(row: Array<Tile> = [], movedTile: Tile, inputTile: Tile) {
+    const closestTileIndex = row.findIndex((rowTile: Tile) => this.isClosestTile(rowTile, movedTile ? movedTile : inputTile))
+    return ((closestTileIndex >= 0 && row[closestTileIndex].value === inputTile.value && (!row[closestTileIndex].isMerged)) ? closestTileIndex : -1)
+  }
+
+  getMoveTileIndex(row: Array<Tile> = [], inputTile: Tile) {
+    const availableTiles = this.getClosestAvailableTiles(row, inputTile)
+    return row.findIndex((rowTile: Tile) => rowTile[this.dimension] == (availableTiles[0] || {})[this.dimension])
+  }
+
+  rotateGrid(grid: Array<Array<Tile>> = this.grid): Array<Array<Tile>> {
+    return grid.reduce((acc: Array<Array<Tile>>, row: Array<Tile>, rowIx: number) => {
+      row.forEach((tile: Tile, colIx: number) => {
+        acc[colIx] = acc[colIx] || []
+        acc[colIx].push(new Tile(tile.x, tile.y, tile.value))
+      })
+      return acc
+    },[])
+  }
+
+  isClosestTile(tileA: Tile, tileB: Tile): boolean {
+    return false
+  }
+
+  getAllAvailableTiles(row: Array<Tile>, inputTile: Tile): Array<Tile> {
+    return []
+  }
+
+  getClosestAvailableTiles(row: Array<Tile>, inputTile: Tile): Array<Tile> {
+    return []
+  }
+
   toString(): string {
     return JSON.stringify(this.grid.map((row) => row.map(tile => tile.value).join(',')), null, 2)
   }
