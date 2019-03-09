@@ -7,9 +7,9 @@ export default class Grid {
   protected direction: number = -1
   protected dimension: string
 
-  constructor(protected  grid: Array<Array<Tile>>  = [], protected gridSize: number = config.get('GRID_SIZE')) {}
+  constructor(protected  grid: Array<Array<Tile>>  = [], protected gridSize: number = config['GRID_SIZE']) {}
 
-  addRandomTileToGrid(numberOfValues: number = config.get('NEW_TILES_PER_TURN')): Array<Array<Tile>> {
+  addRandomTileToGrid(numberOfValues: number = config['NEW_TILES_PER_TURN']): Array<Array<Tile>> {
     new Array(numberOfValues).fill(0).forEach(() => {
       for(const i in (new Array(this.gridSize * this.gridSize).fill(0))){
         const x = Math.floor(Math.random() * this.gridSize)
@@ -32,7 +32,7 @@ export default class Grid {
       }, this.getRowCopy(row))
     })
     this.grid = this.getGridAfterMove(newGrid)
-    return this.addRandomTileToGrid(config.get('NEW_TILES_PER_TURN'))
+    return this.addRandomTileToGrid(config['NEW_TILES_PER_TURN'])
   }
 
   getGridBeforeMove(): Array<Array<Tile>> {

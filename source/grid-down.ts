@@ -5,7 +5,7 @@ import { Directions, Dimensions } from './interface'
 
 export default class GridDown extends GridRight {
 
-  constructor(grid: Array<Array<Tile>> = [], gridSize: number = config.get('GRID_SIZE')) {
+  constructor(grid: Array<Array<Tile>> = [], gridSize: number = config['GRID_SIZE']) {
     super(grid, gridSize)
     this.direction = Directions.DOWN
     this.dimension = Dimensions.X
