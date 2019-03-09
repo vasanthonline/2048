@@ -3,7 +3,7 @@
 
 ## Available Scripts
 
-In the project root directory, you can run below command.
+In the project root directory, run the below command.
 
 ### `sh start.sh`
 To setup all dependencies and start the game. The project expects "nvm" to be already installed and available in PATH. If it's not installed, uncomment the first two lines in start.sh and re-run above command.
