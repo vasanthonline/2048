@@ -23,5 +23,7 @@ export const Messages = {
   GAME_STARTS: (grid: string) => `Game starts.\n ${grid}\n`,
   RECD_EXIT: `Recieved EXIT. Closing the game...`,
   INVALID_INPUT: (input: string) => `Recieved ${input}. It is not a valid direction. ${Messages.DIRECTIONS_DOC}`,
-  VALID_INPUT: (input: string) => `Recieved ${input}. Moving the grid...`
+  VALID_INPUT: (input: string) => `Recieved ${input}. Moving the grid...`,
+  GAME_OVER: `No more moves left. Game over.`,
+  GAME_WIN: `You win. Congrats.`
 }

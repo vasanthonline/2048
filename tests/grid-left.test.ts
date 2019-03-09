@@ -55,7 +55,7 @@ describe('Grid-Left', () => {
   })
 
   it('should initialize a 4x4 grid with random values inserted', () => {
-    const grid = new GridLeft(gridArray, gridSize).addRandomTileToGrid(2)
+    const grid = new GridLeft(gridArray, gridSize).addRandomTileToGrid(2).grid
 
     const filteredGrid = grid.reduce((acc, row) => {
       row.forEach((tile) => {
@@ -181,23 +181,23 @@ describe('Grid-Left', () => {
     const grid = new GridLeft(gridWithValuesArray, gridSize)
     const gridArray = grid.getGridBeforeMove()
     
-    let row = grid.moveOrMergeTilesInRow(gridArray[0], gridArray[0][2])
+    let row = grid.moveOrMergeTilesInRow(gridArray[0], gridArray[0][2]).row
     expect(row[0].value).to.equal(4)
     expect(row[0].isMerged).to.equal(true)
     expect(row[2].value).to.equal(0)
     expect(row[2].isMerged).to.equal(false)
     
-    row = grid.moveOrMergeTilesInRow(gridArray[1], gridArray[1][3])    
+    row = grid.moveOrMergeTilesInRow(gridArray[1], gridArray[1][3]).row
     expect(row[2].value).to.equal(4)
     expect(row[2].isMerged).to.equal(true)
 
-    row = grid.moveOrMergeTilesInRow(gridArray[2], gridArray[2][1])
+    row = grid.moveOrMergeTilesInRow(gridArray[2], gridArray[2][1]).row
     expect(row[0].value).to.equal(2)
     expect(row[0].isMerged).to.equal(false)
     expect(row[1].value).to.equal(0)
     expect(row[1].isMerged).to.equal(false)
 
-    row = grid.moveOrMergeTilesInRow(gridArray[3], gridArray[3][3])
+    row = grid.moveOrMergeTilesInRow(gridArray[3], gridArray[3][3]).row
     expect(row[0].value).to.equal(2)
     expect(row[0].isMerged).to.equal(false)
     expect(row[1].value).to.equal(0)
@@ -206,7 +206,7 @@ describe('Grid-Left', () => {
 
   it('should move the grid to the left', () => {
     const grid = new GridLeft(gridWithValuesArray, gridSize)
-    const newGrid = grid.move()
+    const newGrid = grid.move().grid
     expect(newGrid[0][0].value).to.equal(4)
     expect(newGrid[1][0].value).to.equal(8)
     expect(newGrid[1][1].value).to.equal(4)

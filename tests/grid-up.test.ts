@@ -55,7 +55,7 @@ describe('Grid-Up', () => {
   })
 
   it('should initialize a 4x4 grid with random values inserted', () => {
-    const grid = new GridUp(gridArray, gridSize).addRandomTileToGrid(2)
+    const grid = new GridUp(gridArray, gridSize).addRandomTileToGrid(2).grid
 
     const filteredGrid = grid.reduce((acc, row) => {
       row.forEach((tile) => {
@@ -79,7 +79,7 @@ describe('Grid-Up', () => {
 
   it('should move the grid up one level', () => {
     const grid = new GridUp(gridWithValuesArray, gridSize)
-    const newGrid = grid.move()
+    const newGrid = grid.move().grid
     expect(newGrid[0][0].value).to.equal(4)
     expect(newGrid[0][1].value).to.equal(4)
     expect(newGrid[1][1].value).to.equal(4)

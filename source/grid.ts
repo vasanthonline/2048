@@ -1,6 +1,5 @@
 import * as config from 'config'
 import Tile from './tile'
-import { Directions } from './interface';
 
 export default class Grid {
 
@@ -9,30 +8,37 @@ export default class Grid {
 
   constructor(protected  grid: Array<Array<Tile>>  = [], protected gridSize: number = config['GRID_SIZE']) {}
 
-  addRandomTileToGrid(numberOfValues: number = config['NEW_TILES_PER_TURN']): Array<Array<Tile>> {
+  addRandomTileToGrid(numberOfValues: number = config['NEW_TILES_PER_TURN']): {changed: boolean, grid: Array<Array<Tile>>} {
+    let added = false
     new Array(numberOfValues).fill(0).forEach(() => {
       for(const i in (new Array(this.gridSize * this.gridSize).fill(0))){
         const x = Math.floor(Math.random() * this.gridSize)
         const y = Math.floor(Math.random() * this.gridSize)
         if(this.grid[x][y].value == 0){
           this.grid[x][y].value = Math.random() < 0.9 ? 2 : 4
+          added = true
           break
         }
       }
     })
-    return this.grid
+    return {changed: added, grid: this.grid}
   }
 
-  move(): Array<Array<Tile>> {
+  move(): {changed: boolean, grid: Array<Array<Tile>>} {
+    let moved = false
     const grid = this.getGridBeforeMove()
     const newGrid = grid.map((row: Array<Tile>, rowNumber: number) => {
       const defaultRow = this.getRowCopy(row)
       return defaultRow.reduce((newRow: Array<Tile>, tile: Tile, tileIndex: number) => {
-        return this.moveOrMergeTilesInRow(newRow, tile)
+        const changes = this.moveOrMergeTilesInRow(newRow, tile)
+        moved = moved || changes.changed
+        return changes.row
       }, this.getRowCopy(row))
     })
     this.grid = this.getGridAfterMove(newGrid)
-    return this.addRandomTileToGrid(config['NEW_TILES_PER_TURN'])
+    if(moved)
+      this.grid = this.addRandomTileToGrid(config['NEW_TILES_PER_TURN']).grid
+    return {'changed': moved, 'grid': this.grid}
   }
 
   getGridBeforeMove(): Array<Array<Tile>> {
@@ -47,19 +53,22 @@ export default class Grid {
     return row.map((tile: Tile) => new Tile(tile.x, tile.y, tile.value))
   }
 
-  moveOrMergeTilesInRow(row: Array<Tile> = [], inputTile: Tile): Array<Tile> {
+  moveOrMergeTilesInRow(row: Array<Tile> = [], inputTile: Tile): {changed: boolean, row: Array<Tile>} {
+    let changed = false
     const moveTileIndex = this.getMoveTileIndex(row, inputTile)
     const mergedTileIndex = this.getMergeTileIndex(row, row[moveTileIndex], inputTile)
     if(mergedTileIndex >= 0){
+      changed = true
       row[mergedTileIndex].value = inputTile.value * 2
       row[inputTile[this.dimension]].value = 0
       row[mergedTileIndex].isMerged = true
     }else if(moveTileIndex >= 0){
+      changed = (row[moveTileIndex].value != inputTile.value) && true
       row[moveTileIndex].value = inputTile.value
       row[inputTile[this.dimension]].value = 0
       row[moveTileIndex].isMerged = false
     }
-    return row.sort((tileA: Tile, tileB: Tile) => tileA[this.dimension] - tileB[this.dimension])
+    return {'changed': changed , 'row': row.sort((tileA: Tile, tileB: Tile) => tileA[this.dimension] - tileB[this.dimension])}
   }
 
   getMergeTileIndex(row: Array<Tile> = [], movedTile: Tile, inputTile: Tile) {

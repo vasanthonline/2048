@@ -1,4 +1,5 @@
 {
   "GRID_SIZE": 4,
-  "NEW_TILES_PER_TURN": 1
+  "NEW_TILES_PER_TURN": 1,
+  "WIN_NUMBER": 2048
 }

@@ -55,7 +55,7 @@ describe('Grid-Down', () => {
   })
 
   it('should initialize a 4x4 grid with random values inserted', () => {
-    const grid = new GridDown(gridArray, gridSize).addRandomTileToGrid(2)
+    const grid = new GridDown(gridArray, gridSize).addRandomTileToGrid(2).grid
 
     const filteredGrid = grid.reduce((acc, row) => {
       row.forEach((tile) => {
@@ -79,7 +79,7 @@ describe('Grid-Down', () => {
 
   it('should move the grid down one level', () => {
     const grid = new GridDown(gridWithValuesArray, gridSize)
-    const newGrid = grid.move()
+    const newGrid = grid.move().grid
     expect(newGrid[3][0].value).to.equal(4)
     expect(newGrid[2][1].value).to.equal(4)
     expect(newGrid[3][1].value).to.equal(4)

@@ -28,7 +28,7 @@ describe('Grid', () => {
   })
 
   it('should initialize a 3x3 grid with random values inserted', () => {
-    const grid =  new Grid(gridArray, gridSize).addRandomTileToGrid(2)
+    const grid =  new Grid(gridArray, gridSize).addRandomTileToGrid(2).grid
 
     const filteredGrid = grid.reduce((acc, row) => {
       row.forEach((tile) => {
