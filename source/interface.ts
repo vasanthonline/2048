@@ -1,3 +1,4 @@
+import Tile from './tile'
 
 export enum Directions {
   LEFT = 1,
@@ -14,6 +15,16 @@ export const Commands = {
 export enum Dimensions {
   X = 'x',
   Y = 'y'
+}
+
+export interface GridResponse {
+  changed: boolean,
+  grid: Array<Array<Tile>>
+}
+
+export interface RowResponse {
+  changed: boolean,
+  row: Array<Tile>
 }
 
 export const Messages = {

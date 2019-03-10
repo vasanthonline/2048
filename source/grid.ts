@@ -1,5 +1,6 @@
 import * as config from 'config'
 import Tile from './tile'
+import { GridResponse, RowResponse } from './interface'
 
 export default class Grid {
 
@@ -8,7 +9,7 @@ export default class Grid {
 
   constructor(protected  grid: Array<Array<Tile>>  = [], protected gridSize: number = config['GRID_SIZE']) {}
 
-  addRandomTileToGrid(numberOfValues: number = config['NEW_TILES_PER_TURN']): {changed: boolean, grid: Array<Array<Tile>>} {
+  addRandomTileToGrid(numberOfValues: number = config['NEW_TILES_PER_TURN']): GridResponse {
     let added = false
     new Array(numberOfValues).fill(0).forEach(() => {
       for(const i in (new Array(this.gridSize * this.gridSize).fill(0))){
@@ -24,7 +25,7 @@ export default class Grid {
     return {changed: added, grid: this.grid}
   }
 
-  move(): {changed: boolean, grid: Array<Array<Tile>>} {
+  move(): GridResponse {
     let moved = false
     const grid = this.getGridBeforeMove()
     const newGrid = grid.map((row: Array<Tile>, rowNumber: number) => {
@@ -53,7 +54,7 @@ export default class Grid {
     return row.map((tile: Tile) => new Tile(tile.x, tile.y, tile.value))
   }
 
-  moveOrMergeTilesInRow(row: Array<Tile> = [], inputTile: Tile): {changed: boolean, row: Array<Tile>} {
+  moveOrMergeTilesInRow(row: Array<Tile> = [], inputTile: Tile): RowResponse {
     let changed = false
     const moveTileIndex = this.getMoveTileIndex(row, inputTile)
     const mergedTileIndex = this.getMergeTileIndex(row, row[moveTileIndex], inputTile)

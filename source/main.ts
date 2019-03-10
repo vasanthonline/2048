@@ -7,7 +7,7 @@ import GridDown from './grid-down'
 import GridLeft from './grid-left'
 import GridRight from './grid-right'
 import Tile from './tile'
-import { Directions, Commands, Messages } from './interface'
+import { Directions, Commands, Messages, GridResponse } from './interface'
 
 export default class Main {
 
@@ -28,8 +28,8 @@ export default class Main {
     return JSON.stringify(this.grid.map((row) => row.map(tile => tile.value).join(',')), null, 2)
   }
 
-  move(direction: number): {changed: boolean, grid: Array<Array<Tile>>} {
-    let changed: boolean, movedGrid: {changed: boolean, grid: Array<Array<Tile>>}
+  move(direction: number): GridResponse {
+    let changed: boolean, movedGrid: GridResponse
     switch(direction) {
       case Directions.LEFT:
         movedGrid = new GridLeft(this.grid).move()
@@ -54,21 +54,25 @@ export default class Main {
     }
     return {changed: changed, grid: this.grid}
   }
+
+  rotateGrid(grid: Array<Array<Tile>>): Array<Array<Tile>> {
+    return new Grid(grid).rotateGrid()
+  }
 }
 
 
-const CommandHandler = {
+export const CommandHandler = {
   start: () => {
     console.log(messageTemplate, Messages.RECD_START)
     main = new Main(config['GRID_SIZE'])
     console.log(messageTemplate, Messages.GAME_STARTS(main.getGrid()))
     console.log(messageTemplate, Messages.DIRECTIONS_DOC)
-    return
+    return true
   },
   exit: () => {
     console.log(messageTemplate, Messages.RECD_EXIT)
-    rl.close()
-    return
+    rl && rl.close()
+    return true
   },
   move: (input: string) => {
     return main && main.move(parseInt(input))
@@ -82,9 +86,10 @@ const CommandHandler = {
     }, [])
     if(grid2048.length == 1 && grid2048[0] == config['WIN_NUMBER']){
       console.log(messageTemplate, Messages.GAME_WIN)
-      rl.close()
+      rl && rl.close()
       return true
     }
+    return false
   },
   gameover: (grid: Array<Array<Tile>>) => {
     const zerosGrid = grid.reduce((acc, row) => {
@@ -93,10 +98,34 @@ const CommandHandler = {
       })
       return acc
     }, [])
-    if(zerosGrid.length == 0){
-      console.log(messageTemplate, Messages.GAME_OVER)
-      rl.close()
+    if(zerosGrid.length == 0 && !CommandHandler.canMove(grid)){
+        console.log(messageTemplate, Messages.GAME_OVER)
+        rl && rl.close()
+        return true
     }
+    return false
+  },
+  canMove: (grid: Array<Array<Tile>>) => {
+    const canMoveLeftRight = grid.reduce((acc, row) => {
+      row.forEach((tile, i) => {
+        if(i < config['GRID_SIZE'] - 1)
+          acc.canMoveLeft = acc.canMoveLeft || tile.value == row[i+1].value
+        if(i > 0)
+          acc.canMoveRight = acc.canMoveRight || tile.value == row[i-1].value
+      })
+      return acc
+    }, {'canMoveLeft': false, 'canMoveRight': false})
+    if(!main) main = new Main(config['GRID_SIZE'])
+    const canMoveUpDown = main.rotateGrid(grid).reduce((acc, row) => {
+      row.forEach((tile, i) => {
+        if(i < config['GRID_SIZE'] - 1)
+          acc.canMoveUp = acc.canMoveUp || tile.value == row[i+1].value
+        if(i > 0)
+          acc.canMoveDown = acc.canMoveDown || tile.value == row[i-1].value
+      })
+      return acc
+    }, {'canMoveUp': false, 'canMoveDown': false})
+    return (canMoveLeftRight.canMoveLeft || canMoveLeftRight.canMoveRight || canMoveUpDown.canMoveUp || canMoveUpDown.canMoveDown)
   }
 }
 
@@ -111,9 +140,9 @@ rl.on('line', async (input: string) => {
   const isExitCommand = Commands.exit.test(input)
   const isStartCommand = Commands.start.test(input)
   if(isStartCommand)
-    CommandHandler.start()
+    return CommandHandler.start()
   else if(isExitCommand)
-    CommandHandler.exit()
+    return CommandHandler.exit()
   else if(!main)
     return console.log(messageTemplate, Messages.SEND_START)
   else if(isValidInput < 0)
