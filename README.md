@@ -8,6 +8,17 @@ In the project root directory, run the below command.
 ### `sh start.sh`
 To setup all dependencies and start the game. The project expects "nvm" to be already installed and available in PATH. If it's not installed, uncomment the first two lines in start.sh and re-run above command.
 
+## Individal commands
+
+### `npm run compile`
+To compile Typescript files to Javascript.
+
+### `npm run test`
+To run test cases and produce code coverage report.
+
+### `npm run start`
+To start the game.
+
 ### Game play
 
 1) Print a 4 * 4 board on each turn to the console and wait for user input
