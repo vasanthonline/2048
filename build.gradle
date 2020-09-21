@@ -16,15 +16,15 @@ node {
     download = true
 }
  
-task bundle(type: NpmTask, dependsOn: npmInstall) {
+task bundle(type: NpmTask, dependsOn: npmInstall, group: 'Build', description: 'Transpile typescript to javascript files.') {
     args = ['run', 'build']
 }
 
-task test(type: NpmTask, dependsOn: npmInstall) {
+task test(type: NpmTask, dependsOn: npmInstall, group: 'Verification', description: 'Run unit tests powered by Mocha.') {
     environment = ['CI': 'true']
     args = ['run', 'test']
 }
  
 check.dependsOn(test)
  
-build.dependsOn(bundle)
+assemble.dependsOn(bundle)
