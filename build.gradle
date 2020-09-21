@@ -20,11 +20,11 @@ task bundle(type: NpmTask, dependsOn: npmInstall) {
     args = ['run', 'build']
 }
 
-task test(type: NpmTask) {
+task test(type: NpmTask, dependsOn: npmInstall) {
     environment = ['CI': 'true']
     args = ['run', 'test']
 }
  
 check.dependsOn(test)
  
-assemble.dependsOn(bundle)
+build.dependsOn(bundle)
