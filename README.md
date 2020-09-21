@@ -38,5 +38,9 @@ To start the game.
 1. Graphical UI for the game.
 2. Deployment - The app can be encompassed in a docker container and deployed to a AWS / Google cloud instance.
 
+### License
+
+This project is made available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
+
 
 
